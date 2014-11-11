@@ -5,7 +5,7 @@ android {
   buildToolsVersion '19.1.0'
 
   defaultConfig {
-    applicationId "com.fernandocejas.android10.sample.data"
+    applicationId "com.pinicius.android.ca.skeleton.data"
     minSdkVersion 15
     targetSdkVersion 19
   }
@@ -33,7 +33,6 @@ dependencies {
   compile domainLayer
 
   //library dependencies
-  compile('com.google.code.gson:gson:2.2.4')
   compile fileTree(dir: 'libs', include: ['*.jar'])
 
 }
