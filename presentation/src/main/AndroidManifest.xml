@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fernandocejas.android10.sample.presentation">
+    package="com.pinicius.android.ca.skeleton.presentation">
 
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -21,7 +21,7 @@
       </intent-filter>
     </activity>
 
-    <activity
+    <!--<activity
         android:name=".view.activity.UserListActivity"
         android:label="@string/activity_title_user_list">
     </activity>
@@ -29,7 +29,7 @@
     <activity
         android:name=".view.activity.UserDetailsActivity"
         android:label="@string/activity_title_user_details">
-    </activity>
+    </activity>-->
 
     <service android:name="com.pinicius.android.ca.skeleton.data.sync.service.SyncService"></service>
   </application>
