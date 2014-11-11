@@ -1,7 +1,6 @@
 package com.pinicius.android.ca.skeleton.data.sync.service.push.rabbitmq;
 
-import android.util.Log;
-
+import com.pinicius.android.ca.skeleton.data.exception.PushServiceConnectionException;
 import com.pinicius.android.ca.skeleton.data.sync.service.push.PushServiceConsumer;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
@@ -19,33 +18,42 @@ public class RabbitMQConsumer implements PushServiceConsumer {
 
     private static final String TAG = "RabbitMQServiceConnection";
 
-    public static final String RABBIT_HOST = "192.168.1.34";
-    public static final String RABBIT_USERNAME = "guest";
-    public static final String RABBIT_PASSWORD = "guest";
+    public static final String RABBIT_HOST = "zerb01.baibalab.net";
+    private static final String RABBIT_VHOST = "bizistats";
+    private static final int RABBIT_PORT = 5672;
+    public static final String RABBIT_USERNAME = "read";
+    public static final String RABBIT_PASSWORD = "read";
+    private static final String RABBIT_QUEUE_NAME = "bizistats-q";
 
     private Connection connection;
     private Channel channel;
     private OnReceivePushMessageHandler pushMessageHandler;
 
+    private ConnectionCallback callback;
+
     private boolean connected = false;
 
 
     public RabbitMQConsumer() {
-
+        //empty
     }
 
     @Override
-    public void connect(String host, String user, String password) {
+    public void connect(String host, String user, String password, ConnectionCallback callback) {
+        this.callback = callback;
+
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(host);
+        factory.setVirtualHost(RABBIT_VHOST);
+        factory.setPort(RABBIT_PORT);
         factory.setUsername(user);
         factory.setPassword(password);
         try {
             connection = factory.newConnection();
             channel = connection.createChannel();
             boolean autoAck = false;
-            String queueName = channel.queueDeclare().getQueue();
-            //String queueName = "updates";
+            //String queueName = channel.queueDeclare().getQueue();
+            String queueName = RABBIT_QUEUE_NAME;
             channel.basicConsume(queueName, autoAck, "myConsumerTag",
                     new DefaultConsumer(channel) {
                         @Override
@@ -66,12 +74,11 @@ public class RabbitMQConsumer implements PushServiceConsumer {
                             channel.basicAck(deliveryTag, false);*/
                         }
                     });
+            this.connected = true;
+            this.callback.onConnectionSuccess();
         }
         catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            this.connected = true;
+            this.callback.onConnectionError(new PushServiceConnectionException(e.getCause()));
         }
     }
 

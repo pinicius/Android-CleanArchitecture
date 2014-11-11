@@ -9,9 +9,8 @@ public abstract class BaseSyncService extends Service {
 
     public BaseSyncService() {
         super();
-
-        initialize();
+        //initializeService();
     }
 
-    protected abstract void initialize();
+    abstract void initializeService();
 }
